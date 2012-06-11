@@ -17,22 +17,30 @@ Just copy entire directory SConsGnuVariables to your local ``site_scons``.
 USAGE
 -----
 
-See API documentation (you may need to generate it, see DOCUMENTATION). Here
-we have simple example (code withi SConstruct or SConscript)
+See API documentation (you may need to generate it, see DOCUMENTATION).
+Here is an example of what may be put to ``SConsctruct`` in order to add
+all supported GNU directory variables to your scons command line variables
 
-    ```python
+```python
+    # SConstruct #
     from SConsGnuVariables import GnuDirVariables
     env = Environment()
     gnuvars = GnuDirVariables.AsSConsVariables()
     gnuvars.Update(env, ARGUMENTS)
     print "${prefix}: ", env.subst('${prefix}')
     print "${bindir}: ", env.subst('${bindir}')
-    ``` 
+``` 
 
 The result of ``scons -Q`` will be
 
     ${prefix}:  /usr/local
     ${bindir}:  /usr/local/bin
+    scons: `.' is up to date.
+
+The result of ``scons -Q prefix=/usr`` will be
+
+    ${prefix}:  /usr
+    ${bindir}:  /usr/bin
     scons: `.' is up to date.
 
 
@@ -46,11 +54,11 @@ command
 
 To generate documentation, you may need following packages on your system:
 
-  * epydoc
-  * python-docutils
-  * python-pygments
+  * epydoc <http://epydoc.sourceforge.net/>
+  * python-docutils <http://pypi.python.org/pypi/docutils>
+  * python-pygments <http://pygments.org/>
 
-The documentation is generated within ``doc/api``.
+The generated documentation is located within ``doc/api`` directory.
 
 
 RUNNING EXAMPLES
