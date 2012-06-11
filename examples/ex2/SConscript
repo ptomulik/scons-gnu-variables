@@ -23,6 +23,23 @@
 Import('env')
 
 from SConsGnuVariables import GnuDirVariables
-gnuvars = GnuDirVariables.AsSConsVariables(only = ['prefix', 'bindir'])
+gnuvars = GnuDirVariables.AsSConsVariables(only=['prefix','exec_prefix','bindir'])
 gnuvars.Update(env, ARGUMENTS)
 Help(gnuvars.GenerateHelpText(env))
+
+if not GetOption('help'):
+    print ""
+    print "There are three command line variables (GNU dir variables)"
+    print "currently defined as:"
+    print "=========================================================="
+    print "     prefix=%s" % repr(env['prefix'])
+    print "     exec_prefix=%s" % repr(env['exec_prefix'])
+    print "     bindir=%s" % repr(env['bindir'])
+    print "=========================================================="
+    print ""
+    print "After substitution (interpolation) they have values:"
+    print "=========================================================="
+    print "     prefix=%s" % repr(env.subst('${prefix}'))
+    print "     exec_prefix=%s" % repr(env.subst('${exec_prefix}'))
+    print "     bindir=%s" % repr(env.subst('${bindir}'))
+    print "=========================================================="

@@ -23,7 +23,7 @@ env = Environment()
 Export(['env'])
 
 # Run requested examples (we have 4 of them now)
-for n in range(1,4):
+for n in range(1,5):
   exN = 'ex%d' % n 
   if exN in COMMAND_LINE_TARGETS:
       SConscript('examples/%s/SConscript' % exN)

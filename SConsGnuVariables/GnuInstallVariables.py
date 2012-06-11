@@ -83,7 +83,7 @@ _am_primary_dir_prefixes = {
     'LOCALES'     : ['locale']
 }
 
-for i in range(1,8):
+for i in range(1,9):
     _am_primary_dir_prefixes['MANS'].append('man%d' % i)
 
 def SupportedPrimaryNames():

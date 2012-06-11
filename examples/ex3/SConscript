@@ -32,10 +32,21 @@ env.Append( exec_prefix = GetOption('exec_prefix') )
 env.Append( package = 'mypkg' )
 
 if not GetOption('help'):
-   print 'Some of the GNU dir variables:'
+   print ''
+   print 'There are two options added to control GNU dir variables:'
+   print '============================================================'
+   print '  --prefix'
+   print '  --exec-prefix'
+   print '============================================================'
+   print "run 'scons ex3 --help' to see them under Local Options"
+   print ''
+   print 'There are also several command line variables. Some of them:'
+   print '============================================================'
    print '  bindir=%s' % env.subst('${bindir}')
    print '  sbindir=%s' % env.subst('${sbindir}')
    print '  sysconfdir=%s' % env.subst('${sysconfdir}')
    print '  pkglibdir=%s' % env.subst('${pkglibdir}')
    print '  man2dir=%s' % env.subst('${man2dir}')
    print '  man2ext=%s' % env.subst('${man2ext}')
+   print '============================================================'
+   print 'The options and construction variables work together here'

@@ -22,6 +22,8 @@
 Import('env')
 
 from SConsGnuVariables import GnuDirVariables
+from pprint import PrettyPrinter
 
+pp = PrettyPrinter(indent = 4)
 print "Supported GNU directory variables: "
-print GnuDirVariables.SupportedVariables()
+pp.pprint(GnuDirVariables.SupportedVariables())

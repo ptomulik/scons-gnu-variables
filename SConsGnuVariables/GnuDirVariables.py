@@ -207,7 +207,7 @@ _variable_templates = [
     '${libexecdir}/${package}' )
 ]
 
-for i in range(1,8):
+for i in range(1,9):
     _variable_templates.append( ('man%ddir' % i, '', '${prefix}/man/man%d' %i) )
     _variable_templates.append( ('man%dext' % i, '', '.%d' %i) )
 
