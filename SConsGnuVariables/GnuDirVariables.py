@@ -328,7 +328,7 @@ def AddToSConsOptions(**kw):
     The above example results with two new SCons options: ``--prefix`` and
     ``--exec-prefix`` being added to command line options. The option values
     provided by user at command shell are copied to construction variables
-    `prefix` and `exec_prefix`.
+    ``prefix`` and ``exec_prefix``.
     """
     from SCons.Script.Main import AddOption
     def _add_option(name, desc, default):
