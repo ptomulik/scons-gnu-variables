@@ -17,7 +17,7 @@ Just copy entire directory SConsGnuVariables to your local ``site_scons``.
 USAGE
 -----
 
-See API documentation (you may need to generate it, see DOCUMENTATION).
+See API documentation (you may need to generate it, see *DOCUMENTATION*).
 Here is an example of what may be put to ``SConsctruct`` in order to add
 all supported GNU directory variables to your scons command line variables
 
