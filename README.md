@@ -33,16 +33,19 @@ all supported GNU directory variables to your scons command line variables
 
 The result of ``scons -Q`` will be
 
+```
     ${prefix}:  /usr/local
     ${bindir}:  /usr/local/bin
     scons: `.' is up to date.
+```
 
 The result of ``scons -Q prefix=/usr`` will be
 
+```
     ${prefix}:  /usr
     ${bindir}:  /usr/bin
     scons: `.' is up to date.
-
+```
 
 DOCUMENTATION
 -------------
@@ -50,7 +53,9 @@ DOCUMENTATION
 API documentation can be generated from top level directory with the following
 command
 
+```
   scons api-doc
+``` 
 
 To generate documentation, you may need following packages on your system:
 
@@ -64,14 +69,16 @@ The generated documentation is located within ``doc/api`` directory.
 RUNNING EXAMPLES
 ----------------
 
-Each example consists of its `SConscript' file located under examples/exN,
+Each example consists of its ``SConscript`` file located under examples/exN,
 and ocassionally may involve other files within same directory.
 The examples should be run from top-level directory by invoking 
-    
+
+``` 
   scons ex1           # For example/ex1
   scons ex1 --help    # It may be worth to see help message
   ...
- 
+``` 
+
 LICENSE
 -------
 Copyright &copy; 2012 by Paweł Tomulik
