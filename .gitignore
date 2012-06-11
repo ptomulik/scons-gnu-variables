@@ -36,3 +36,6 @@ config.log
 
 # Generated documentation
 doc/api/*
+
+# Backup files
+*.bak
