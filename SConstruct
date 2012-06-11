@@ -22,14 +22,12 @@
 env = Environment()
 Export(['env'])
 
-AlwaysBuild(Alias('ex1'))
-AlwaysBuild(Alias('ex2'))
-
-# Run particular example
-for ex in ['ex1', 'ex2', 'ex3', 'ex4' ]:
-  if ex in COMMAND_LINE_TARGETS:
-      SConscript('examples/%s/SConscript' % ex)
-      AlwaysBuild(Alias(ex))
+# Run requested examples (we have 4 of them now)
+for n in range(1,4):
+  exN = 'ex%d' % n 
+  if exN in COMMAND_LINE_TARGETS:
+      SConscript('examples/%s/SConscript' % exN)
+      AlwaysBuild(Alias(exN))
 
 epydoc = env.Detect(['epydoc'])
 if epydoc:
