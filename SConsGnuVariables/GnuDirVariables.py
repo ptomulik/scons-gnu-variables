@@ -189,7 +189,7 @@ _variable_templates = [
   ( 'mandir',
     'The top-level directory for installing the man pages (if any) for this'
   + ' package.',
-    '${datarlootdir}/man' ),
+    '${datarootdir}/man' ),
   ( 'pkgdatadir',
     'The directory for installing idiosyncratic read-only'
   + ' architecture-independent data files for this program.',
