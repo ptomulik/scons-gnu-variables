@@ -3,7 +3,7 @@ SConsGnuVariables
 
 Welcome to SConsGnuVariables.
 
-This package provides SCons with GNU variables (e.g. direcory wariables)
+This package provides SCons with GNU variables (e.g. direcory variables)
 commonly used by GNU Makefiles. You may easilly add to your command line
 variables or options such as $prefix or $bindir.
 
@@ -17,7 +17,11 @@ Just copy entire directory SConsGnuVariables to your local ``site_scons``.
 USAGE
 -----
 
-See API documentation (you may need to generate it, see *DOCUMENTATION*).
+See API documentation (you may need to generate it, see
+[DOCUMENTATION](#documentation)).
+
+### GnuDirVariables
+
 Here is an example of what may be put to ``SConsctruct`` in order to add
 all supported GNU directory variables to your scons command line variables
 
@@ -47,9 +51,16 @@ The result of ``scons -Q prefix=/usr`` will be
     scons: `.' is up to date.
 ```
 
+### GnuInstallVariables
+
+The package also provides ``GNU Istall variables`` enclosed within module
+``SConsGnuVariables.GnuInstallVariables``. This module mainly keeps organized
+standard uniform names of makefile install targets such as
+``nobase_include_HEADERS`` or ``bin_PROGRAMS``. For more information
+see module's API documentation.
+
 DOCUMENTATION
 -------------
-
 API documentation can be generated from top level directory with the following
 command
 

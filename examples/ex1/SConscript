@@ -19,10 +19,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-
 Import('env')
 
 from SConsGnuVariables import GnuDirVariables
-gnuvars = GnuDirVariables.AsSConsVariables(only = ['prefix', 'bindir'])
-gnuvars.Update(env, ARGUMENTS)
-Help(gnuvars.GenerateHelpText(env))
+
+print "Supported GNU directory variables: "
+print GnuDirVariables.SupportedVariables()

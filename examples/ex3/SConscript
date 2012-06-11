@@ -23,6 +23,19 @@
 Import('env')
 
 from SConsGnuVariables import GnuDirVariables
-gnuvars = GnuDirVariables.AsSConsVariables(only = ['prefix', 'bindir'])
+
+GnuDirVariables.AddToSConsOptions( only = ['prefix', 'exec_prefix'] )
+gnuvars = GnuDirVariables.AsSConsVariables( exclude = ['prefix', 'exec_prefix'] )
 gnuvars.Update(env, ARGUMENTS)
-Help(gnuvars.GenerateHelpText(env))
+env.Append( prefix = GetOption('prefix') )
+env.Append( exec_prefix = GetOption('exec_prefix') )
+env.Append( package = 'mypkg' )
+
+if not GetOption('help'):
+   print 'Some of the GNU dir variables:'
+   print '  bindir=%s' % env.subst('${bindir}')
+   print '  sbindir=%s' % env.subst('${sbindir}')
+   print '  sysconfdir=%s' % env.subst('${sysconfdir}')
+   print '  pkglibdir=%s' % env.subst('${pkglibdir}')
+   print '  man2dir=%s' % env.subst('${man2dir}')
+   print '  man2ext=%s' % env.subst('${man2ext}')

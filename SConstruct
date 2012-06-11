@@ -26,9 +26,10 @@ AlwaysBuild(Alias('ex1'))
 AlwaysBuild(Alias('ex2'))
 
 # Run particular example
-for ex in ['ex1', 'ex2']:
+for ex in ['ex1', 'ex2', 'ex3', 'ex4' ]:
   if ex in COMMAND_LINE_TARGETS:
       SConscript('examples/%s/SConscript' % ex)
+      AlwaysBuild(Alias(ex))
 
 epydoc = env.Detect(['epydoc'])
 if epydoc:

@@ -393,3 +393,10 @@ def AsSConsVariables(files = [], args = {}, is_global = 1, **kw):
     """
     from SCons.Variables import Variables
     return AddToSConsVariables( Variables(files, args, is_global), **kw )
+
+def SupportedVariables():
+    """Return the names of supported GNU dir variables"""
+    variables = []
+    for v in  _variable_templates:
+        variables.append(v[0])
+    return variables
