@@ -18,25 +18,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
-
-env = Environment()
-Export(['env'])
-
-# Run requested examples (we have 4 of them now)
-for n in range(1,6):
-  exN = 'ex%d' % n 
-  if exN in COMMAND_LINE_TARGETS:
-      SConscript('examples/%s/SConscript' % exN)
-      AlwaysBuild(Alias(exN))
-
-epydoc = env.Detect(['epydoc'])
-if epydoc:
-   epydocflags = '-v --html --css grayscale --inheritance listed'
-   epydoccom = ' '.join([epydoc,'-o $TARGET.dir', epydocflags,
-                         'SConsGnuVariables'])
-   source =  env.Glob('SConsGnuVariables/*.py')
-   target = 'doc/api/index.html'
-   api_doc = env.Command(target, source, epydoccom)
-   AlwaysBuild(Alias('api-doc', api_doc))
-
-
