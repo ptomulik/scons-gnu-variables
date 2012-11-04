@@ -21,14 +21,14 @@
 
 Import('env')
 
-from SConsGnuVariables import GnuInstallVariables
+from SConsGnuVariables import AmUniformNames
 from pprint import PrettyPrinter
 
 
 pp = PrettyPrinter(indent = 4)
-print("Supported GNU Install Primaries:")
-pp.pprint(sorted(GnuInstallVariables.SupportedPrimaryNames()))
-print("Supported GNU Primariy Dir Prefixes:")
-pp.pprint(GnuInstallVariables.SupportedPrimaryDirPrefixes())
-print("Supported GNU Install Variables:")
-pp.pprint(sorted(GnuInstallVariables.SupportedInstallVariables()))
+print("Standard primary names:")
+pp.pprint(sorted(AmUniformNames.StandardPrimaryNames()))
+print("Standard directory prefixes:")
+pp.pprint(AmUniformNames.StandardPrimaryDirPrefixes())
+print("Standard uniform names:")
+pp.pprint(sorted(AmUniformNames.StandardUniformNames()))

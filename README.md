@@ -51,13 +51,12 @@ The result of ``scons -Q prefix=/usr`` will be
     scons: `.' is up to date.
 ```
 
-### GnuInstallVariables
+### AmUniformNames
 
-The package also provides ``GNU Istall variables`` enclosed within module
-``SConsGnuVariables.GnuInstallVariables``. This module mainly keeps organized
-standard uniform names of makefile install targets such as
-``nobase_include_HEADERS`` or ``bin_PROGRAMS``. For more information
-see module's API documentation.
+The package also provides ``automake uniform naming`` enclosed within module
+``SConsGnuVariables.AmUniformNames``. This module mainly keeps organized
+standard uniform names such as ``nobase_include_HEADERS`` or ``bin_PROGRAMS``.
+For more information see module's API documentation.
 
 DOCUMENTATION
 -------------
