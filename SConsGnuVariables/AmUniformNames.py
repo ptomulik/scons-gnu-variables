@@ -182,11 +182,13 @@ def _prepare_primary_names_list(primary_names, use_std_primary_names):
 def rsplit_longest_suffix(uname, suffixes):
     minindex = len(uname)
     for suffix in suffixes:
-        if len(uname) >= len(suffix):
-            index = len(uname) - len(suffix)
-            if (uname[index:] == suffix) and index < minindex:
-                if (index > 0 and uname[index-1] == '_') or index == 0:
-                    minindex = index
+        # FIXME: prevent suffix from starting with '_'?
+        index = len(uname) - len(suffix)
+        if index == 0 and uname == suffix:
+            return None, suffix
+        elif index > 0 and index < minindex and uname[index:] == suffix \
+             and uname[index-1] == '_':
+            minindex = index
     if minindex < len(uname):
         if minindex <= 1:
             return None, uname[minindex:]
