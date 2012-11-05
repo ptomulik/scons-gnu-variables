@@ -84,7 +84,8 @@ _am_primary_dir_prefixes = {
     'PYTHON'      : ['python', 'pkgpython'],
     'JAVA'        : [],
     'SCRIPTS'     : ['bin', 'sbin', 'libexec', 'pkglibexec', 'pkgdata'],
-    'DATA'        : ['data', 'sysconf', 'sharedstate', 'localstate', 'pkgdata'],
+    'DATA'        : ['data', 'sysconf', 'sharedstate', 'localstate', 'pkgdata',
+                     'doc', 'html', 'dvi', 'pdf', 'ps'],
     'HEADERS'     : ['include', 'oldinclude', 'pkginclude'],
     'MANS'        : ['man'],
     'TEXINFOS'    : ['info'],
@@ -97,6 +98,13 @@ _am_install_data_prefixes = [
     'man',
     'include',
     'oldinclude',
+    'doc',
+    'info',
+    'html',
+    'dvi',
+    'pdf',
+    'ps',
+    'locale',
     'pkgdata',
     'pkginclude'
 ]
@@ -106,15 +114,20 @@ _am_install_exec_prefixes = [
     'sbin',
     'libexec',
     'sysconf',
+    'sharedstate',
     'localstate',
     'lib',
-    'pkglib'
+    'lisp',
+    'pkglib',
+    'pkglibexec'
 ]
 
-_am_user_defined_dir_prefixes = [ ]
+_am_man_sections = map(lambda x : str(x), range(0,10)) + ['n', 'l']
 
-for i in range(1,9):
-    _am_primary_dir_prefixes['MANS'].append('man%d' % i)
+for sec in _am_man_sections:
+    _am_primary_dir_prefixes['MANS'].append('man%s' % sec)
+    _am_dir_prefixes.append('man%s' % sec)
+    _am_install_data_prefixes.append('man%s' % sec)
 
 def standard_primary_names():
     return _am_primary_dir_prefixes.keys()
@@ -143,6 +156,9 @@ def standard_uniform_names():
             for addprefix in addprefixes:
                 variables.append('%s_%s_%s' % (addprefix, dirprefix, primary))
     return variables
+
+def standard_man_sections():
+    return _am_man_sections
 
 def _prepare_dir_prefixes_list(dir_prefixes, use_std_dir_prefixes):
     if dir_prefixes is None:
@@ -245,6 +261,9 @@ def StandardUniformNames(**kw):
     prefixes and PRIMARY names)"""
     return standard_uniform_names()
 
+def StandardManSections(**kw):
+    return standard_man_sections()
+
 def RSplitPrimaryName(uname, **kw):
     try:                primary_names = kw['am_primary_names']
     except KeyError:    primary_names = None
@@ -258,6 +277,13 @@ def RSplitDirPrefix(uname, **kw):
     try:                use_std_dir_prefixes = kw['am_std_dir_prefixes']
     except KeyError:    use_std_dir_prefixes = True
     return rsplit_dir_prefix(uname, dir_prefixes, use_std_dir_prefixes)
+
+def ExtractDirPrefix(uname, **kw):
+    try:                dir_prefixes = kw['am_dir_prefixes']
+    except KeyError:    dir_prefixes = None
+    try:                use_std_dir_prefixes = kw['am_std_dir_prefixes']
+    except KeyError:    use_std_dir_prefixes = True
+    return extract_dir_prefix(uname, dir_prefixes, use_std_dir_prefixes)
 
 def IsUserDefinedExecDirPrefix(prefix, **kw):
     try:                user_prefixes = kw['am_dir_prefixes']

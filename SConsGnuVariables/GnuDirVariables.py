@@ -160,7 +160,7 @@ _variable_templates = [
   ( 'docdir',
     'The directory for installing documentation files (other than Info) for this'
   + ' package.',
-    '${datarootdir}/doc/${intall_package}' ),
+    '${datarootdir}/doc/${install_package}' ),
   ( 'infodir',
     'The directory for installing the Info files for this package.',
     '${datarootdir}/info' ),
@@ -207,9 +207,9 @@ _variable_templates = [
     '${libexecdir}/${package}' )
 ]
 
-for i in range(1,9):
-    _variable_templates.append( ('man%ddir' % i, '', '${prefix}/man/man%d' %i) )
-    _variable_templates.append( ('man%dext' % i, '', '.%d' %i) )
+for sec in map(lambda x : str(x), range(0,10)) + ['l', 'n']:
+    _variable_templates.append( ('man%sdir' % sec, '', '${prefix}/man/man%s' %sec) )
+    _variable_templates.append( ('man%sext' % sec, '', '.%s' %sec) )
 
 def _process_variable_templates(callback, **kw):
     """Feed all predefined GNU variables to callback.
