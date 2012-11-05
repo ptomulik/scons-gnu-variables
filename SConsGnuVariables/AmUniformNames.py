@@ -178,39 +178,30 @@ def _prepare_primary_names_list(primary_names, use_std_primary_names):
         primary_names.extend(standard_primary_names())
     return list(set(primary_names))
 
-def rsplit_known_suffix(uname, suffixes):
-    try:
-        prefix, suffix = uname.rsplit('_',1)
-    except ValueError:
-        if uname in suffixes:
-            return None, uname
+# TODO: revise, test
+def rsplit_longest_suffix(uname, suffixes):
+    minindex = len(uname)
+    for suffix in suffixes:
+        if len(uname) >= len(suffix):
+            index = len(uname) - len(suffix)
+            if (uname[index:] == suffix) and index < minindex:
+                if (index > 0 and uname[index-1] == '_') or index == 0:
+                    minindex = index
+    if minindex < len(uname):
+        if minindex <= 1:
+            return None, uname[minindex:]
         else:
-            return uname, None
-    if suffix in suffixes:
-        return prefix, suffix
-    else:
-        return uname, None
-
-def rsplit_unknown_suffix(uname, suffixes):
-    try:
-        prefix, suffix = uname.rsplit('_',1)
-    except ValueError:
-        if uname not in suffixes:
-            return None, uname
-        else:
-            return uname, None
-    if suffix not in suffixes:
-        return prefix, suffix
+            return uname[:minindex-1], uname[minindex:]
     else:
         return uname, None
 
 def rsplit_primary_name(uname, primary_names=None, use_std_primary_names=True):
     pnames = _prepare_primary_names_list(primary_names,use_std_primary_names)
-    return rsplit_known_suffix(uname, pnames)
+    return rsplit_longest_suffix(uname, pnames)
 
 def rsplit_dir_prefix(uname, dir_prefixes=None, use_std_dir_prefixes=True):
     dprefixes = _prepare_dir_prefixes_list(dir_prefixes,use_std_dir_prefixes)
-    return rsplit_known_suffix(uname, dprefixes)
+    return rsplit_longest_suffix(uname, dprefixes)
 
 def extract_dir_prefix(uname, dir_prefixes=None, use_std_dir_prefixes=True):
     pfx, dirpfx = rsplit_dir_prefix(uname,dir_prefixes,use_std_dir_prefixes)
