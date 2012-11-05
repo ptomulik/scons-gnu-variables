@@ -4,21 +4,23 @@ SConsGnuVariables
 Welcome to SConsGnuVariables.
 
 This package provides SCons with GNU variables (e.g. direcory variables)
-commonly used by GNU Makefiles. You may easilly add to your command line
-variables or options such as $prefix or $bindir.
+commonly used by GNU build system (autotools). With this package you may
+easilly add to your command line variables such as ``prefix``, ``bindir`` or
+options such as ``--prefix``, ``--bindir``. An appropriate construction
+variables may be also easilly created within SCons ``Enrvironment`` object.
 
 INSTALLATION
 ------------
 
-Just copy entire directory SConsGnuVariables to your local ``site_scons``.
+Copy entire directory ``SConsGnuVariables`` to your local ``site_scons``.
 
     cp -r scons-gnu-variables/SConsGnuVariables your/project/site_scons/
 
 USAGE
 -----
 
-See API documentation (you may need to generate it, see
-[DOCUMENTATION](#documentation)).
+The package contains modules with python functions. To use it see API
+documentation (to generate it, see [DOCUMENTATION](#documentation)).
 
 ### GnuDirVariables
 
