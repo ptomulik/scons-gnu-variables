@@ -3,13 +3,13 @@
 **General Description**
 
 This module provides a kind of 'Automake Uniform Naming', an idea similar to
-that known from automake (see automake documentation, `The Uniform Naming
-Scheme`_ and `What Gets Installed`_). An example of the 'Automake Uniform
-Name' is ``nobase_include_HEADERS`` or ``bin_PROGRAMS``. This module keeps
-standard primary names, prefixes, additional prefixes, and combinations of
-these. The module also provides functions for filtering collections of uniform
-names and extracting the names that should be handled by ``install-exec`` and
-``install-data`` targets (see `The Two Parts of Install`_). There are also
+that known from automake (see automake's `The Uniform Naming Scheme`_ section).
+An example of the 'Automake Uniform Name' is ``nobase_include_HEADERS`` or
+``bin_PROGRAMS``. This module keeps standard primary names, prefixes,
+additional prefixes, and combinations of these. The module also provides
+functions for filtering collections of uniform names and extracting the names
+that should be handled by certain Makefile's targets (e.g. ``install-exec`` or
+``install-data`` defined in `The Two Parts of Install`_). There are also
 several other functions that may be used to manipulate uniform names.
 
 **Terminology**
@@ -17,14 +17,14 @@ several other functions that may be used to manipulate uniform names.
 Let's introduce few terms for clarity:
     
     - full uniform name
-        A string in form ``[additional_prefix_]main_prefix_PRIMARY``.
-        The ``additional_prefix_`` is optional. Whenever a uniform name
-        is decomposed, the additional_prefix, main_prefix, and PRIMARY parts
+        A string in form ``[add_prefix_]main_prefix_PRIMARY``.
+        The ``add_prefix_`` is optional. Whenever a uniform name
+        is decomposed, the add_prefix, main_prefix, and PRIMARY parts
         are extracted by matching appropriate pieces of uniform name to known
-        predefined primary names and prefixes. The uniform name gets decomposed
-        from right to left - primary name is extracted first, then the main
-        prefix is determined from the remaining part and all that is left is
-        treated as additional prefix.
+        predefined primary names and prefixes. The uniform name gets
+        decomposed from right to left - primary name is extracted first, then
+        the main prefix is determined from the remaining part and all that is
+        left is treated as additional prefix.
     - uniform name
         A string formatted simillarly to full uniform name. The uniform name
         may be incomplete, i.e. some parts of full uniform name may be already
@@ -47,13 +47,12 @@ Let's introduce few terms for clarity:
         and main prefix). 
 
         The list of standard additional prefixes may be retrieved with
-        `standard_additional_prefixes()` or `StandardAdditionalPrefixes()`.
+        `standard_add_prefixes()` or `StandardAddPrefixes()`.
 
 For related automake information see
 <http://www.gnu.org/software/automake/manual/html_node/Uniform.html>
 
 .. _The Uniform Naming Scheme: http://www.gnu.org/software/automake/manual/automake.html#Uniform
-.. _What Gets Installed: http://www.gnu.org/software/automake/manual/automake.html#Install
 .. _The Two Parts of Install: http://www.gnu.org/software/automake/manual/automake.html#The-Two-Parts-of-Install
 """
 #
@@ -80,7 +79,7 @@ For related automake information see
 
 __docformat__ = 'restructuredText'
 
-__am_additional_prefixes = [
+__am_add_prefixes = [
     'dist',
     'nodist',
     'nobase',
@@ -152,7 +151,7 @@ __am_primary_main_prefixes = {
 }
 
 # certain forbidden combinations
-__am_primary_forbid_main_prefixes = {
+__am_forbid_primary_main_prefixes = {
     'PROGRAMS'      : [],
     'LIBRARIES'     : [],
     'LTLIBRARIES'   : [],
@@ -166,7 +165,7 @@ __am_primary_forbid_main_prefixes = {
     'TEXINFOS'      : [],
 }
 
-__am_primary_forbid_add_prefixes = {
+__am_forbid_primary_add_prefixes = {
     'PROGRAMS'      : [],
     'LIBRARIES'     : [],
     'LTLIBRARIES'   : [],
@@ -180,7 +179,7 @@ __am_primary_forbid_add_prefixes = {
     'TEXINFOS'      : [],
 }
 
-__am_main_forbid_add_prefixes = {
+__am_forbid_main_add_prefixes = {
     'bin'           : [],
     'sbin'          : [],
     'libexec'       : [],
@@ -240,8 +239,8 @@ for sec in __am_man_sections:
     __am_primary_main_prefixes['MANS'].append('man%s' % sec)
     __am_main_prefixes.append('man%s' % sec)
     __am_install_data_prefixes.append('man%s' % sec)
-    __am_main_forbid_add_prefixes['man%s' % sec] = \
-        __am_main_forbid_add_prefixes['man']
+    __am_forbid_main_add_prefixes['man%s' % sec] = \
+        __am_forbid_main_add_prefixes['man']
 
 
 # add noinst and check EXTRA prefixes where appropriate
@@ -252,40 +251,68 @@ for primary in __am_primary_main_prefixes.keys():
 def standard_primary_names():
     """Return list of standard primary names as defined by GNU build system.
 
+    **Note**
+    
+    You may wish to use `StandardPrimaryNames()` instead.
+    
+    **Description**
+
     This function returns the list of primary names defined in the automake
-    documentation, see
-    http://www.gnu.org/software/automake/manual/html_node/Uniform.html
+    documentation, see `The Uniform Naming Scheme`_ section of automake
+    documentation.
+
+    .. _The Uniform Naming Scheme: http://www.gnu.org/software/automake/manual/html_node/Uniform.html
     """
     return __am_primary_names
 
 def standard_main_prefixes():
     """Return list of standard main prefixes.
 
+    **Note**
+    
+    You may wish to use `StandardMainPrefixes()` instead.
+    
+    **Description**
+
     This function returns the list of standard prefixes that may go just before
     PRIMARY names. The list contains directory prefixes based on directory
-    variables defined in GNU coding standards (see
-    http://www.gnu.org/prep/standards/html_node/Directory-Variables.html#Directory-Variables)
-    extended by pkgxxx directory variables defined in
-    http://www.gnu.org/software/automake/manual/html_node/Uniform.html and few
-    other prefixes.  The returned list also contains special prefixes such as
-    ``noinst`` and ``check``.
+    variables defined in GNU coding standards (see `Variables for Installation
+    Directories`_) extended by pkgxxx directory variables defined by `The
+    Uniform Naming Scheme`_  (automake) and few other prefixes.  The returned
+    list also contains special prefixes such as ``noinst`` and ``check``.
+
+    .. _The Uniform Naming Scheme: http://www.gnu.org/software/automake/manual/html_node/Uniform.html
+    .. _Variables for Installation Directories: http://www.gnu.org/prep/standards/html_node/Directory-Variables.html#Directory-Variables
     """
     return __am_main_prefixes
 
-def standard_additional_prefixes():
+def standard_add_prefixes():
     """Return list of standard additional prefixes
+
+    **Note**
+    
+    You may wish to use `StandardAddPrefixes()` instead.
+    
+    **Description**
 
     This function returns the list of standard prefixes defined in the
     automake's documentation, i.e. ``nobase``, ``notrans`` and others. See
-    http://www.gnu.org/software/automake/manual/html_node/Uniform.html
-    for details.
+    `The Uniform Naming Scheme`_ (automake) for details.
+
+    .. _The Uniform Naming Scheme: http://www.gnu.org/software/automake/manual/html_node/Uniform.html
     """
-    return __am_additional_prefixes
+    return __am_add_prefixes
 
 def standard_primary_main_prefixes(primary = None):
     """Return list of standard prefixes that may go with particular primary
     name.
+
+    **Note**
     
+    You may wish to use `StandardPrimaryMainPrefixes()` instead.
+    
+    **Description**
+
     The function returns, a list of main prefixes that may go together
     with the given ``primary`` name. So, if, for example, the ``primary`` is
     ``"PROGRAMS"``, the supported directory prefixes will be ``["bin", "sbin",
@@ -295,21 +322,33 @@ def standard_primary_main_prefixes(primary = None):
         { 'PROGRAMS' : ["bin","sbin","libexec","pkglibexec","noinst","check"],
           'LIBRARIES' : ["lib","pkglib","noinst","check"], ... },
 
-    is returned
+    is returned.
 
     The lists were developed according to automake's documentation, especially:
 
-        - ``PROGRAMS`` : http://www.gnu.org/software/automake/manual/automake.html#Program-Sources
-        - ``LIBRARIES`` : http://www.gnu.org/software/automake/manual/automake.html#A-Library
-        - ``LTLIBRARIES`` : http://www.gnu.org/software/automake/manual/automake.html#Libtool-Libraries
-        - ``LISP`` : http://www.gnu.org/software/automake/manual/automake.html#Emacs-Lisp
-        - ``PYTHON`` : http://www.gnu.org/software/automake/manual/automake.html#Python
-        - ``JAVA`` : http://www.gnu.org/software/automake/manual/automake.html#Java
-        - ``SCRIPTS`` : http://www.gnu.org/software/automake/manual/automake.html#Scripts
-        - ``DATA`` : http://www.gnu.org/software/automake/manual/automake.html#Data
-        - ``HEADERS`` :  http://www.gnu.org/software/automake/manual/automake.html#Headers
-        - ``MANS`` : http://www.gnu.org/software/automake/manual/automake.html#Man-Pages
-        - ``TEXINFOS`` : http://www.gnu.org/software/automake/manual/automake.html#Texinfo
+        - ``PROGRAMS`` : `Defining program sources`_ section,
+        - ``LIBRARIES`` : `Building a library`_ section,
+        - ``LTLIBRARIES`` : `Building Libtool Libraries`_ section,
+        - ``LISP`` : `Emacs Lisp`_ section,
+        - ``PYTHON`` : `Python`_ section,
+        - ``JAVA`` :  `Java bytecode compilation`_ section,
+        - ``SCRIPTS`` : `Executable scripts`_ section,
+        - ``DATA`` : `Architecture-independent data files`_ section,
+        - ``HEADERS`` : `Header files`_ secition,
+        - ``MANS`` : `Man pages`_ section,
+        - ``TEXINFOS`` : `Texinfo`_ section
+
+    .. _Defining program sources: http://www.gnu.org/software/automake/manual/automake.html#Program-Sources
+    .. _Building a library: http://www.gnu.org/software/automake/manual/automake.html#A-Library
+    .. _Building Libtool Libraries: http://www.gnu.org/software/automake/manual/automake.html#Libtool-Libraries
+    .. _Emacs Lisp: http://www.gnu.org/software/automake/manual/automake.html#Emacs-Lisp
+    .. _Python: http://www.gnu.org/software/automake/manual/automake.html#Python
+    .. _Java bytecode compilation: http://www.gnu.org/software/automake/manual/automake.html#Java
+    .. _Executable scripts: http://www.gnu.org/software/automake/manual/automake.html#Scripts
+    .. _Architecture-independent data files: http://www.gnu.org/software/automake/manual/automake.html#Data
+    .. _Header files:  http://www.gnu.org/software/automake/manual/automake.html#Headers
+    .. _Man pages: http://www.gnu.org/software/automake/manual/automake.html#Man-Pages
+    .. _Texinfo: http://www.gnu.org/software/automake/manual/automake.html#Texinfo
     """
     if primary is None:
         return __am_primary_main_prefixes
@@ -319,8 +358,29 @@ def standard_primary_main_prefixes(primary = None):
         return []
 
 def standard_man_sections():
-    """Return list of standard man sections (manpage sections)"""
+    """Return list of standard man sections (manpage sections)
+
+    **Note**
+    
+    You may wish to use `StandardManSections()` instead.
+    
+    **Description**
+
+    The function returns a list of man page sections as defined in the section
+    `Man pages`_ of automake documentation.
+
+    .. _Man pages: http://www.gnu.org/software/automake/manual/automake.html#Man-Pages
+    """
     return __am_man_sections
+
+def _prepare_primary_names_list(primary_names, use_std_primary_names):
+    if primary_names is None:
+        primary_names = []
+    else:
+        primary_names = list(primary_names)
+    if use_std_primary_names:
+        primary_names.extend(standard_primary_names())
+    return list(set(primary_names))
 
 def _prepare_main_prefixes_list(main_prefixes, use_std_main_prefixes):
     if main_prefixes is None:
@@ -331,14 +391,15 @@ def _prepare_main_prefixes_list(main_prefixes, use_std_main_prefixes):
         main_prefixes.extend(standard_main_prefixes())
     return list(set(main_prefixes))
 
-def _prepare_primary_names_list(primary_names, use_std_primary_names):
-    if primary_names is None:
-        primary_names = []
+def _prepare_add_prefixes_list(add_prefixes, use_std_add_prefixes):
+    if add_prefixes is None:
+        add_prefixes = []
     else:
-        primary_names = list(primary_names)
-    if use_std_primary_names:
-        primary_names.extend(standard_primary_names())
-    return list(set(primary_names))
+        add_prefixes = list(add_prefixes)
+    if use_std_add_prefixes:
+        add_prefixes.extend(standard_add_prefixes())
+    return list(set(add_prefixes))
+
 
 # TODO: revise, test
 def rsplit_longest_suffix(uname, suffixes):
@@ -424,12 +485,12 @@ def rsplit_longest_suffix(uname, suffixes):
     else:
         return uname, None
 
-def rsplit_primary_name(uname, user_primaries=None, use_std_primary_names=True):
+def rsplit_primary_name(uname, primary_names=None, use_std_primary_names=True):
     """Split uniform name into prefix and primary name.
 
     **Note**
     
-    You may rather wish to use `RSplitPrimaryName()`.
+    You may wish to use `RSplitPrimaryName()` instead.
 
     **Description**
 
@@ -437,13 +498,13 @@ def rsplit_primary_name(uname, user_primaries=None, use_std_primary_names=True):
     (predefined and/or user-defined) words are present at the end of uniform
     name contained in ``uname``, it is going to be split-out from the
     ``uname``. The function works simillary to `rsplit_longest_suffix()`. The
-    list of suffixes is taken from `standard_primary_names()` and is optionally
-    augmented with user-defined primaries.
+    list of suffixes is taken from `standard_primary_names()` and is
+    optionally augmented with user-defined primaries.
 
     :Parameters:
         uname : str
             the uniform name string to be split
-        user_primaries : sequence
+        primary_names : sequence
             user-defined list (or other sequence) of primary names; if ``None``
             (default) no user-defined primary names are provided
         use_std_primary_names : boolean
@@ -453,10 +514,10 @@ def rsplit_primary_name(uname, user_primaries=None, use_std_primary_names=True):
     :Returns:
         returns tuple ``(prefix,primary)``; if the ``uname`` doesn't end with
         a known primary name, the function returns ``(uname, None)`` what means
-        "can't determine primary name"; if the  ``uname`` has no prefix and
+        "can't determine primary name"; if the ``uname`` has no prefix and
         contains only primary part, the function returns ``(None, uname)``
     """
-    names = _prepare_primary_names_list(user_primaries,use_std_primary_names)
+    names = _prepare_primary_names_list(primary_names,use_std_primary_names)
     return rsplit_longest_suffix(uname, names)
 
 def rsplit_main_prefix(uname, user_prefixes=None, use_std_main_prefixes=True):
@@ -464,7 +525,7 @@ def rsplit_main_prefix(uname, user_prefixes=None, use_std_main_prefixes=True):
 
     **Note**
     
-    You may rather wish to use `RSplitMainPrefix()`
+    You may wish to use `RSplitMainPrefix()` instead.
 
     **Description**
 
@@ -479,7 +540,7 @@ def rsplit_main_prefix(uname, user_prefixes=None, use_std_main_prefixes=True):
         uname : str
             the uniform name string to be split
         user_prefixes : sequence
-            user-defined list (or other sequence) of directory prefixes; if
+            user-defined list (or other sequence) of main prefixes; if
             ``None`` (default) no user-defined directory prefixes are provided
         use_std_main_prefixes : boolean
             if ``True`` (default), the standard primary names (see
@@ -487,12 +548,357 @@ def rsplit_main_prefix(uname, user_prefixes=None, use_std_main_prefixes=True):
             user-defined directory prefixes
     :Returns:
         returns tuple (prefix,main_prefix); if the ``uname`` doesn't end with
-        known directory prefix, returns (uname, None); if the  ``uname`` has no
-        prefix and contains only known directory prefix, the function returns
-        (None,uname)
+        known directory prefix, returns (uname, None); if the ``uname``
+        contains no additional prefix, the function returns (None,uname)
     """
     prefixes = _prepare_main_prefixes_list(user_prefixes,use_std_main_prefixes)
     return rsplit_longest_suffix(uname, prefixes)
+
+def rsplit_add_prefix(uname, user_prefixes=None, use_std_add_prefixes=True):
+    """Splits-out known additional prefix from the end of uniform name.
+
+    **Note**
+    
+    You may wish to use `RSplitAddPrefix()` instead.
+
+    **Description**
+
+    Example additional prefixes are ``nobase`` or ``nodist``. If one of
+    such (predefined or user-defined) strings is present at the end of
+    ``uname`` string, it is going to be split-out. The function works simillary
+    to `rsplit_longest_suffix()`. The list of suffixes is taken from
+    `standard_add_prefixes()` and is optionally augmented with
+    user-defined ``user_prefixes``.
+
+    :Parameters:
+        uname : str
+            the uniform name string to be split
+        user_prefixes : sequence
+            user-defined list (or other sequence) of additional prefixes; if
+            ``None`` (default) no user-defined directory prefixes are provided
+        use_std_add_prefixes : boolean
+            if ``True`` (default), the standard primary names (see
+            `standard_add_prefixes()`) are taken into account
+            additionally to user-defined directory prefixes
+    :Returns:
+        returns tuple (prefix,add_prefix); if the ``uname`` doesn't end
+        with known additional prefix, returns (uname, None); if the  ``uname``
+        is composed solely of single additional prefix, the function returns
+        (None,uname)
+    """
+    prefixes = _prepare_add_prefixes_list(user_prefixes,
+                                                 use_std_add_prefixes)
+    return rsplit_longest_suffix(uname, prefixes)
+
+def decompose_name(funame, primary_names=None, main_prefixes=None,
+                           add_prefixes=None,
+                           use_std_primary_names=True,
+                           use_std_main_prefixes=True,
+                           use_std_add_prefixes=True):
+    """Decomposes full uniform name into three parts.
+
+    **Note**
+
+    You may wish to use `DecomposeName()` instead.
+
+    **Description**
+
+    The function decomposes full uniform name into three parts:
+
+        - (possibly empty) list of additional prefixes,
+        - main prefix,
+        - primary name.
+
+    The function returns a tuple ``(prefix_list, main_prefix, primary)``, where
+    ``prefix_list`` is a list, ``main_prefix`` is a string and ``primary`` is
+    also string.
+
+    If the function is unable to decompose ``funame`` (e.g. ``funame``
+    contains malformed name), a ``ValueError`` exception is raised.
+
+    **Few examples**:
+
+        >>> def dun(*args):
+        ...     from SConsGnuVariables.AmUniformNames import decompose_name
+        ...     try: return decompose_name(*args)
+        ...     except ValueError, e:
+        ...         print 'ValueError:', e
+        ...         return None
+        ... 
+        >>> dun('PROGRAMS')
+        ValueError: malformed uniform name 'PROGRAMS'
+        >>> dun('bin_PROGRAMS')
+        ([], 'bin', 'PROGRAMS')
+        >>> dun('nodist_bin_PROGRAMS')
+        (['nodist'], 'bin', 'PROGRAMS')
+        >>> dun('notrans_nodist_bin_PROGRAMS')
+        (['notrans','nodist'], 'bin', 'PROGRAMS')
+        >>> dun('bin_FOO')
+        ValueError: can't recognize primary name in 'bin_FOO'
+        >>> dun('bin_FOO', ['FOO','FOO1'])
+        ([], 'bin', 'FOO')
+        >>> dun('bar_FOO', ['FOO','FOO1'])
+        ValueError: can't recognize main prefix in 'bar_FOO'
+        >>> dun('bar_FOO', ['FOO','FOO1'], ['bar','bar1'])
+        ([], 'bar', 'FOO')
+        >>> dun('geez_bar_FOO', ['FOO','FOO1'], ['bar','bar1'])
+        ValueError: unknown prefix 'geez' in uniform name 'geez_bar_FOO'
+        >>> dun('geez_bar_FOO', ['FOO','FOO1'], ['bar','bar1'], ['geez', 'geez1'])
+        (['geez'], 'bar', 'FOO')
+
+    :Parameters:
+        funame : str
+            full uniform name to be decomposed
+        primary_names : sequence | None
+            used-defined primary names (default: None)
+        main_prefixes : sequence | None
+            used-defined main prefixes (default: None)
+        add_prefixes : sequence | None
+            used-defined additional prefixes (default: None)
+        use_std_primary_names : boolean
+            if ``True`` (default), standard primary names are taken into
+            account when recognizing primary part of uniform name ``funame``
+        use_std_main_prefixes : boolean
+            if ``True`` (default), standard main prefixes are taken into
+            account when recognizing main_prefix part of uniform name
+            ``funame``
+        use_std_add_prefixes : boolean
+            if ``True`` (default), standard additional prefixes are taken into
+            account when recognizing additional prefixes in uniform name
+            ``funame``
+
+    :Returns:
+        returns tuple ``(prefix_list, main_prefix, primary)``, where
+        ``prefix_list`` is possibly empty list of additional prefixes
+        recognized in ``funame``, the ``main_prefix`` is a string containing
+        main prefix recognized in ``funame`` and ``primary`` is a string
+        containing the primary name recognized in ``funame``.
+    """
+    prefix, primary = rsplit_primary_name(funame, primary_names,
+                                          use_std_primary_names)
+    if primary is None:
+        raise ValueError("can't recognize primary name in %r" % funame)
+    if prefix is None:
+        raise ValueError("malformed uniform name %r" % funame)
+    prefix, main_prefix = rsplit_main_prefix(prefix, main_prefixes,
+                                             use_std_main_prefixes)
+    if main_prefix is None:
+        raise ValueError("can't recognize main prefix in %r" % funame)
+    prefix_list = []
+    while prefix is not None:
+        prefix, add_prefix = rsplit_add_prefix(prefix, add_prefixes,
+                                               use_std_add_prefixes)
+        if add_prefix is None:
+            raise ValueError("unknown prefix %r in uniform name %r" \
+                             % (prefix, funame))
+        prefix_list.insert(0,add_prefix)
+    return prefix_list, main_prefix, primary
+
+def _ensure_not_forbidden(prefixes, main_prefix, primary,
+                          forbid_primary_main_prefixes=None,
+                          forbid_primary_add_prefixes=None,
+                          forbid_main_add_prefixes=None,
+                          use_std_forbid_primary_main_prefixes=True,
+                          use_std_forbid_primary_add_prefixes=True,
+                          use_std_forbid_main_add_prefixes=True):
+    """Ensure that given combination of additional prefixes, main prefix and
+    primary name is not forbidden
+
+    If the combination of ``prefixes``, ``main_prefix`` and
+    ``primary`` is disallowed in uniform name, the function throws
+    ``ValueError`` with explanation.
+
+    **Examples**
+
+        >>> def enf(*args):
+        ...     from SConsGnuVariables.AmUniformNames import _ensure_not_forbidden
+        ...         try: return _ensure_not_forbidden(*args)
+        ...         except ValueError, e:
+        ...             print 'ValueError: ', e
+        ...             return None
+        ...
+        >>> enf([],'bin','PROGRAMS')
+        True
+        >>> enf(['nobase'], 'man1', 'MANS')
+        ValueError:  fobidden combination of additional prefix 'nobase' and main prefix 'man1' in uniform name 'nobase_man1_MANS'
+
+    :Parameters:
+        prefixes : sequence
+            sequence of additional prefixes extracted from uniform name
+        main_prefix : str
+            main prefix extracted from uniform name
+        primary : str
+            primary name extracted from uniform name
+        forbid_primary_main_prefixes : dict | None
+            user-defined dictionary of disallowed combinations of primary
+            names and main prefixes. The dictionary has form::
+
+                {'PRIM1' : [ 'main1', 'main2', ... ],
+                 'PRIM2' : [ 'main3', 'main3', ... ], ... }
+
+            where ``PRIM1``, ``PRIM2``, ... (keys) are primary names, and
+            for each primary name there is a list of disallowed main prefixes
+        forbid_primary_add_prefixes : dict | None
+            user-defined dictionary of disallowed combinations of primary
+            names and additional prefixes. The dictionary has form::
+
+                {'PRIM1' : [ 'prefix1', 'prefix2', ... ],
+                 'PRIM2' : [ 'prefix3', 'prefix3', ... ], ... }
+
+            where ``PRIM1``, ``PRIM2``, ... (keys) are primary names, and
+            for each primary name there is a list of disallowed additional
+            prefixes
+        forbid_main_add_prefixes : dict | None
+            user-defined dictionary of disallowed combinations of main prefix
+            and additional prefixes. The dictionary has form::
+
+                {'main1' : [ 'prefix1', 'prefix2', ... ],
+                 'main2' : [ 'prefix3', 'prefix3', ... ], ... }
+
+            where ``main1``, ``main2``, ... (keys) are main prefixes, and
+            for each such prefix there is a list of disallowed additional
+            prefixes
+        use_std_forbid_primary_main_prefixes : boolean
+            if ``True`` (default), take into account also standard forbid
+            definitions for primary name + main prefix combinations
+        use_std_forbid_primary_add_prefixes : boolean
+            if ``True`` (default), take into account also standard forbid
+            definitions for primary name + additional prefix combinations
+        use_std_forbid_main_add_prefixes : boolean
+            if ``True`` (default), take into account also standard forbid
+            definitions for main prefix + additional prefix combinations
+    """
+    funame = '_'.join(list(prefixes) + [main_prefix, primary])
+    # Assert main_prefix + primary is not forbidden
+    if forbid_primary_main_prefixes is not None:
+        try:
+            if main_prefix in forbid_primary_main_prefixes[primary]:
+                raise ValueError("fobidden combination of prefix %r " \
+                    "and primary name %r in uniform name %r" 
+                    % (main_prefix, primary, funame) )
+        except KeyError:
+            pass
+    if use_std_forbid_primary_main_prefixes:
+        try:
+            if main_prefix in __am_forbid_primary_main_prefixes[primary]:
+                raise ValueError("fobidden combination of prefix %r " \
+                    "and primary name %r in uniform name %r" 
+                    % (main_prefix, primary, funame) )
+        except KeyError:
+            pass
+    # Assert add_prefix + primary is not forbidden
+    if forbid_primary_add_prefixes is not None:
+        for prefix in prefixes:
+            try:
+                if prefix in forbid_primary_add_prefixes[primary]:
+                    raise ValueError("fobidden combination of additional " \
+                        "prefix %r and primary name %r in uniform name %r" 
+                        % (prefix, primary, funame) )
+            except KeyError:
+                pass
+    if use_std_forbid_primary_add_prefixes:
+        for prefix in prefixes:
+            try:
+                if prefix in __am_forbid_primary_add_prefixes[primary]:
+                    raise ValueError("fobidden combination of additional " \
+                        "prefix %r and primary name %r in uniform name %r" 
+                        % (prefix, primary, funame) )
+            except KeyError:
+                pass
+    # Assert add_prefix + main prefix is not forbidden
+    if forbid_main_add_prefixes is not None:
+        for prefix in prefixes:
+            try:
+                if prefix in forbid_main_add_prefixes[main_prefix]:
+                    raise ValueError("fobidden combination of additional " \
+                        "prefix %r and main prefix %r in uniform name %r" 
+                        % (prefix, main_prefix, funame) )
+            except KeyError:
+                pass
+    if use_std_forbid_main_add_prefixes:
+        for prefix in prefixes:
+            try:
+                if prefix in __am_forbid_main_add_prefixes[main_prefix]:
+                    raise ValueError("fobidden combination of additional " \
+                        "prefix %r and main prefix %r in uniform name %r" 
+                        % (prefix, main_prefix, funame) )
+            except KeyError:
+                pass
+    return True
+
+def _ensure_predefined(prefixes, main_prefix, primary,
+                       primary_main_prefixes=None,
+                       use_std_primary_main_prefixes=True):
+    """Ensure that given combination of main prefix and primary name is
+    predefined.
+    """
+    funame = '_'.join(list(prefixes) + [main_prefix, primary])
+    if use_std_primary_main_prefixes:
+        try:
+            if main_prefix in __am_primary_main_prefixes[primary]:
+                return True
+        except KeyError:
+            pass
+    if primary_main_prefixes is not None:
+        try:
+            if main_prefix in primary_main_prefixes[primary]:
+                return True
+        except KeyError:
+            pass
+    raise ValueError("unsupported combination of main prefix %r and " \
+                     "primary name %r in uniform name %r" \
+                     % (main_prefix, primary, funame))
+
+def ensure_name_sanity(funame, primary_names=None, 
+                      main_prefixes=None,
+                      add_prefixes=None, 
+                      primary_main_prefixes=None,
+                      forbid_primary_main_prefixes=None,
+                      forbid_primary_add_prefixes=None,
+                      forbid_main_add_prefixes=None,
+                      use_std_primary_names=True,
+                      use_std_main_prefixes=True,
+                      use_std_add_prefixes=True,
+                      use_std_primary_main_prefixes=True,
+                      use_std_forbid_primary_main_prefixes=True,
+                      use_std_forbid_primary_add_prefixes=True,
+                      use_std_forbid_main_add_prefixes=True):
+    """Perform sanity checks on the full uniform name ``funame``.
+
+    **Note**
+
+    You may wish to use `EnsureNameSanity()` instead.
+
+    **Description**
+
+    This function performs sanity checks on full uniform name contained in 
+    ``funame`` and throws ``ValueError`` if the sanity check fails. The
+    sanity check fails if the combination of additional prefixes, main prefix
+    and primary name contained in the full uniform name is known to be
+    forbidden or is not predefined by standard (and user).
+
+    The sanity checks include:
+
+        - checks performed by `decompose_name()` function,
+        - checks performed by `_ensure_not_forbidden()` function,
+        - checks performed by `_ensure_predefined()` function.
+
+    The arguments are passed to each of the above functions without
+    modification.
+    """
+    prefixes, main_prefix, primary = decompose_name(funame,
+        primary_names, main_prefixes, add_prefixes,
+        use_std_primary_names, use_std_main_prefixes,
+        use_std_add_prefixes)
+    _ensure_not_forbidden(prefixes, main_prefix, primary,
+        forbid_primary_main_prefixes, forbid_primary_add_prefixes,
+        forbid_main_add_prefixes,
+        use_std_forbid_primary_main_prefixes,
+        use_std_forbid_primary_add_prefixes,
+        use_std_forbid_main_add_prefixes)
+    _ensure_predefined(prefixes, main_prefix, primary, primary_main_prefixes,
+        use_std_primary_main_prefixes)
+    return True
 
 def is_noinst_main_prefix(prefix):
     return prefix in __am_noinst_main_prefixes
@@ -530,7 +936,11 @@ def is_install_data_prefix2(prefix,prefixes):
 def is_install_exec_prefix(prefix, prefixes=None, use_std_prefixes=True):
     """Check if the ``prefix`` should be clasified as intall-exec directory
     prefix.
-    
+
+    **Note**
+
+    You may wish to use `IsInstallExecPrefix()` instead.
+
     :Parameters:
         prefix : str
             directory prefix to check, e.g. ``bin`` or ``pkglib``
@@ -541,12 +951,17 @@ def is_install_exec_prefix(prefix, prefixes=None, use_std_prefixes=True):
     """
     if use_std_prefixes:
         if prefix in __am_install_exec_prefixes: return True
+        if prefix in __am_install_data_prefixes: return False
         if is_install_exec_prefix2(prefix,standard_main_prefixes()): return True
     return is_install_exec_prefix2(prefix,prefixes)
 
 def is_install_data_prefix(prefix, prefixes=None, use_std_prefixes=True):
     """Check if the ``prefix`` should be clasified as install-data directory
     prefix
+
+    **Note**
+
+    You may wish to use `IsInstallDataPrefix()` instead.
     
     :Parameters:
         prefix : str
@@ -558,9 +973,111 @@ def is_install_data_prefix(prefix, prefixes=None, use_std_prefixes=True):
     """
     if use_std_prefixes:
         if prefix in __am_install_data_prefixes: return True
+        if prefix in __am_install_exec_prefixes: return False
         if is_install_data_prefix2(prefix,standard_main_prefixes()): return True
     return is_install_data_prefix2(prefix,prefixes)
 
+def is_install_exec_name(funame, primary_names=None, main_prefixes=None,
+                         use_std_primary_names=True,
+                         use_std_main_prefixes=True):
+    """Check if the ``funame`` should be handled by ``install-exec`` target
+
+    **Note**
+
+    You may wish to use `IsInstallExecName()` instead.
+
+    **Examples**:
+
+        >>> from SConsGnuVariables.AmUniformNames import is_install_exec_name
+        >>> is_install_exec_name('bin_PROGRAMS')
+        True
+        >>> is_install_exec_name('data_DATA')
+        False
+        >>> is_install_exec_name('noinst_PROGRAMS')
+        False
+        >>> is_install_exec_name('foo_PROGRAMS', None, ['foo','fooexecbar'])
+        False
+        >>> is_install_exec_name('fooexecbar_PROGRAMS', None, ['foo','fooexecbar'])
+        True
+
+    :Parameters:
+        funame : str
+            full uniform name to be checked
+        primary_names : sequence | None
+            used-defined primary names (default: None)
+        main_prefixes : sequence | None
+            used-defined main prefixes (default: None)
+        use_std_primary_names : boolean
+            if ``True`` (default), standard primary names are taken into
+            account when recognizing primary part of uniform name ``funame``
+        use_std_main_prefixes : boolean
+            if ``True`` (default), standard main prefixes are taken into
+            account when recognizing main_prefix part of uniform name
+            ``funame``
+    """
+    prefix, primary = rsplit_primary_name(funame, primary_names,
+                                          use_std_primary_names)
+    if primary is None:
+        raise ValueError("can't recognize primary name in %r" % funame)
+    if prefix is None:
+        raise ValueError("malformed uniform name %r" % funame)
+    prefix, main_prefix = rsplit_main_prefix(prefix, main_prefixes,
+                                             use_std_main_prefixes)
+    if main_prefix is None:
+        raise ValueError("can't recognize main prefix in %r" % funame)
+    return is_install_exec_prefix(main_prefix, main_prefixes,
+                                  use_std_main_prefixes)
+
+def is_install_data_name(funame, primary_names=None, main_prefixes=None,
+                         use_std_primary_names=True,
+                         use_std_main_prefixes=True):
+    """Check if the ``funame`` should be handled by ``install-data`` target
+
+    **Note**
+
+    You may wish to use `IsInstallDataName()` instead.
+
+    **Examples**:
+
+        >>> from SConsGnuVariables.AmUniformNames import is_install_data_name
+        >>> is_install_data_name('bin_PROGRAMS')
+        False
+        >>> is_install_data_name('data_DATA')
+        True
+        >>> is_install_data_name('noinst_TEXINFOS')
+        False
+        >>> is_install_data_name('foo_PROGRAMS', None, ['foo','fooexecbar'])
+        True
+        >>> is_install_data_name('fooexecbar_PROGRAMS', None, ['foo','fooexecbar'])
+        False
+
+    :Parameters:
+        funame : str
+            full uniform name to be checked
+        primary_names : sequence | None
+            used-defined primary names (default: None)
+        main_prefixes : sequence | None
+            used-defined main prefixes (default: None)
+        use_std_primary_names : boolean
+            if ``True`` (default), standard primary names are taken into
+            account when recognizing primary part of uniform name ``funame``
+        use_std_main_prefixes : boolean
+            if ``True`` (default), standard main prefixes are taken into
+            account when recognizing main_prefix part of uniform name
+            ``funame``
+    """
+    prefix, primary = rsplit_primary_name(funame, primary_names,
+                                          use_std_primary_names)
+    if primary is None:
+        raise ValueError("can't recognize primary name in %r" % funame)
+    if prefix is None:
+        raise ValueError("malformed uniform name %r" % funame)
+    prefix, main_prefix = rsplit_main_prefix(prefix, main_prefixes,
+                                             use_std_main_prefixes)
+    if main_prefix is None:
+        raise ValueError("can't recognize main prefix in %r" % funame)
+    return is_install_data_prefix(main_prefix, main_prefixes,
+                                  use_std_main_prefixes)
 
 def StandardPrimaryNames(**kw):
     """Return standard PRIMARY names known from automake"""
@@ -570,9 +1087,9 @@ def StandardMainPrefixes(**kw):
     """Return standard directory prefixes known from automake"""
     return standard_main_prefixes()
 
-def StandardAdditionalPrefixes(**kw):
+def StandardAddPrefixes(**kw):
     """Return standard additional prefixes known from automake"""
-    return standard_additional_prefixes()
+    return standard_add_prefixes()
 
 def StandardPrimaryMainPrefixes(primary=None,**kw):
     """Return allowed dir prefixes for given PRIMARY name"""
@@ -584,65 +1101,142 @@ def StandardManSections(**kw):
 
 def RSplitPrimaryName(uname, **kw):
     """Interface to `rsplit_primary_name()`."""
-    try:                primary_names = kw['am_primary_names']
-    except KeyError:    primary_names = None
-    try:                use_std_primary_names = kw['am_use_std_primary_names']
-    except KeyError:    use_std_primary_names = True
-    return rsplit_primary_name(uname, primary_names, use_std_primary_names)
+    args = ()
+    try:                args += (kw['am_primary_names'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_primary_names'],)
+    except KeyError:    args += (True,)
+    return rsplit_primary_name(uname, *args)
+        
+def DecomposeName(funame,**kw):
+    """Interface to `decompose_name()`."""
+    args = ()
+    try:                args += (kw['am_primary_names'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_main_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_add_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_primary_names'],)
+    except KeyError:    args += (True,)
+    try:                args += (kw['am_use_std_main_prefixes'],)
+    except KeyError:    args += (True,)
+    try:                args += (kw['am_use_std_add_prefixes'],)
+    except KeyError:    args += (True,)
+    return decompose_name(funame, *args)
+
+def EnsureNameSanity(funame,**kw):
+    """Interface to `ensure_name_sanity()`"""
+    args = ()
+    try:             args += (kw['am_primary_names'],)
+    except KeyError: args +=(None,) 
+    try:             args += (kw['am_main_prefixes'],)
+    except KeyError: args +=(None,)
+    try:             args += (kw['am_add_prefixes'],)
+    except KeyError: args +=(None,) 
+    try:             args += (kw['am_primary_main_prefixes'],)
+    except KeyError: args +=(None,)
+    try:             args += (kw['am_forbid_primary_main_prefixes'],)
+    except KeyError: args +=(None,)
+    try:             args += (kw['am_forbid_primary_add_prefixes'],)
+    except KeyError: args +=(None,)
+    try:             args += (kw['am_forbid_main_add_prefixes'],)
+    except KeyError: args +=(None,)
+    try:             args += (kw['am_use_std_primary_names'],)
+    except KeyError: args +=(True,)
+    try:             args += (kw['am_use_std_main_prefixes'],)
+    except KeyError: args +=(True,)
+    try:             args += (kw['am_use_std_add_prefixes'],)
+    except KeyError: args +=(True,)
+    try:             args += (kw['am_use_std_primary_main_prefixes'],)
+    except KeyError: args +=(True,)
+    try:             args += (kw['am_use_std_forbid_primary_main_prefixes'],)
+    except KeyError: args +=(True,)
+    try:             args += (kw['am_use_std_forbid_primary_add_prefixes'],)
+    except KeyError: args +=(True,)
+    try:             args += (kw['am_use_std_forbid_main_add_prefixes'],)
+    except KeyError: args +=(True,)
+    return ensure_name_sanity(funame, *args)
 
 def RSplitMainPrefix(uname, **kw):
     """Interface to `rsplit_main_prefix()`."""
-    try:                main_prefixes = kw['am_main_prefixes']
-    except KeyError:    main_prefixes = None
-    try:                use_std_main_prefixes = kw['am_use_std_main_prefixes']
-    except KeyError:    use_std_main_prefixes = True
-    return rsplit_main_prefix(uname, main_prefixes, use_std_main_prefixes)
+    args = ()
+    try:                args += (kw['am_main_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_main_prefixes'],)
+    except KeyError:    args += (True,)
+    return rsplit_main_prefix(uname, *args)
+
+def RSplitAddPrefix(uname, **kw):
+    """Interface to `rsplit_add_prefix()`."""
+    args = ()
+    try:                args += (kw['am_add_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_add_prefixes'],)
+    except KeyError:    args += (True,)
+    return rsplit_add_prefix(uname, *args)
 
 def IsInstallExecPrefix(prefix, **kw):
     """Interface to `is_install_exec_prefix()`."""
-    try:                main_prefixes = kw['am_main_prefixes']
-    except KeyError:    main_prefixes = None
-    try:                use_std_main_prefixes = kw['am_use_std_main_prefixes']
-    except KeyError:    use_std_main_prefixes = True
-    return is_install_exec_prefix(prefix, main_prefixes, use_std_main_prefixes)
+    args = ()
+    try:                args += (kw['am_main_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_main_prefixes'],)
+    except KeyError:    args += (True,)
+    return is_install_exec_prefix(prefix, *args)
 
 def IsInstallDataPrefix(prefix, **kw):
     """Interface to `is_install_data_prefix()`."""
-    try:                main_prefixes = kw['am_main_prefixes']
-    except KeyError:    main_prefixes = None
-    try:                use_std_main_prefixes = kw['am_use_std_main_prefixes']
-    except KeyError:    use_std_main_prefixes = True
-    return is_install_data_prefix(prefix, main_prefixes, use_std_main_prefixes)
+    args = ()
+    try:                args += (kw['am_main_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_main_prefixes'],)
+    except KeyError:    args += (True,)
+    return is_install_data_prefix(prefix, *args)
 
-def IsInstallExecName(uname, **kw):
-    """Check if the uniform name should be handled by ``install-exec``."""
-    prefix, primary = RSplitPrimaryName(uname, **kw)
-    prefix, main_prefix = RSplitMainPrefix(prefix, **kw)
-    return IsInstallExecPrefix(main_prefix,**kw)
+def IsInstallExecName(funame, **kw):
+    """Interface to `is_install_exec_name()`."""
+    args = ()
+    try:                args += (kw['am_primary_names'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_main_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_primary_names'],)
+    except KeyError:    args += (True,)
+    try:                args += (kw['am_use_std_main_prefixes'],)
+    except KeyError:    args += (True,)
+    return is_install_exec_name(funame, *args)
 
-def IsInstallDataName(uname, **kw):
-    """Check if the uniform name should be handled by ``install-data``."""
-    prefix, primary = RSplitPrimaryName(uname, **kw)
-    prefix, main_prefix = RSplitMainPrefix(prefix, **kw)
-    return IsInstallDataPrefix(main_prefix,**kw)
+def IsInstallDataName(funame, **kw):
+    """Interface to `is_install_data_name()`."""
+    args = ()
+    try:                args += (kw['am_primary_names'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_main_prefixes'],)
+    except KeyError:    args += (None,)
+    try:                args += (kw['am_use_std_primary_names'],)
+    except KeyError:    args += (True,)
+    try:                args += (kw['am_use_std_main_prefixes'],)
+    except KeyError:    args += (True,)
+    return is_install_data_name(funame, *args)
 
-def FilterInstallExecNames(unames,**kw):
+def FilterInstallExecNames(funames,**kw):
     """Filter uniform names and return only these which are to be handled by
     ``install-exec`` target
 
     :Parameters:
-        unames
+        funames
             uniform variable names,
 
     :Keywords:
-        kw['am_primary_names']
+        am_primary_names : sequence
             user-defined primary names (default: None)
-        kw['am_use_std_primary_names'] : boolean
-            use standard predefined primary names (default: True)
-        kw['am_main_prefixes']
+        am_main_prefixes : sequence
             user-defined directory prefixes (default: None)
-        kw['am_use_std_main_prefixes'] : boolean
-            use standard predefined directory prefixes (default: True)
+        am_use_std_primary_names : boolean
+            use also standard predefined primary names (default: True)
+        am_use_std_main_prefixes : boolean
+            use also standard predefined directory prefixes (default: True)
 
     :Return:
         returns list of variable names that should be handled by
@@ -652,30 +1246,30 @@ def FilterInstallExecNames(unames,**kw):
 
     .. python::
         from SConsGnuVariables.AmUniformNames import FilterInstallExecNames
-        unames =  ['bin_PROGRAMS', 'lib_LIBRARIES', 'nobase_include_HEADERS',
+        funames =  ['bin_PROGRAMS', 'lib_LIBRARIES', 'nobase_include_HEADERS',
                    'sysconf_DATA']
-        exec_names = FilterInstallExecNames(unames)
+        exec_names = FilterInstallExecNames(funames)
         # exec_names is [ 'bin_PROGRAMS', 'lib_LIBRARIES', 'sysconf_DATA' ]
     """
-    return [uname for uname in unames if IsInstallExecName(uname,**kw)]
+    return [funame for funame in funames if IsInstallExecName(funame,**kw)]
   
-def FilterInstallDataNames(unames,**kw):
+def FilterInstallDataNames(funames,**kw):
     """Filter uniform names and return only these which are to be handled by
     ``install-data`` target
 
     :Parameters:
-        unames
+        funames
             uniform variable names,
 
     :Keywords:
-        kw['am_primary_names']
+        am_primary_names : sequence 
             user-defined primary names (default: None)
-        kw['am_use_std_primary_names'] : boolean
-            use standard predefined primary names (default: True)
-        kw['am_main_prefixes']
+        am_main_prefixes : sequence
             user-defined directory prefixes (default: None)
-        kw['am_use_std_main_prefixes'] : boolean
-            use standard predefined directory prefixes (default: True)
+        am_use_std_primary_names : boolean
+            use also standard predefined primary names (default: True)
+        am_use_std_main_prefixes : boolean
+            use also standard predefined directory prefixes (default: True)
     
     :Return:
         returns list of variable names that should be handled by
@@ -685,12 +1279,12 @@ def FilterInstallDataNames(unames,**kw):
 
     .. python::
         from SConsGnuVariables.AmUniformNames import FilterInstallDataNames
-        unames =  ['bin_PROGRAMS', 'lib_LIBRARIES', 'nobase_include_HEADERS',
+        funames =  ['bin_PROGRAMS', 'lib_LIBRARIES', 'nobase_include_HEADERS',
                    'sysconf_DATA']
-        data_names = FilterInstallDataNames(unames)
+        data_names = FilterInstallDataNames(funames)
         # data_names is [ 'nobase_include_HEADERS' ]
     """
-    return [uname for uname in unames if IsInstallDataName(uname,**kw)]
+    return [funame for funame in funames if IsInstallDataName(funame,**kw)]
 
 # Local Variables:
 # # tab-width:4
