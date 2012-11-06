@@ -42,7 +42,7 @@ Let's introduce few terms for clarity:
 
         The list of standard main prefixes may be retrieved with
         `standard_main_prefixes()` or `StandardMainPrefixes()`.
-    - additinal prefix
+    - additional prefix
         The remaining part of full uniform name (after removing primary name
         and main prefix). 
 
@@ -112,12 +112,12 @@ __am_main_prefixes = [
     'pkginclude',
     'pkglib',
     'pkglibexec',
-# not really directory prefixes, but they appear at the place
+# not directory prefixes,
     'noinst',
     'check'
 ]
 
-# directory prefixes that prohibit installation
+# main prefixes that prohibit installation
 __am_noinst_main_prefixes = [
     'noinst',
     'check'
@@ -151,6 +151,65 @@ __am_primary_main_prefixes = {
     'TEXINFOS'    : ['info']
 }
 
+# certain forbidden combinations
+__am_primary_forbid_main_prefixes = {
+    'PROGRAMS'      : [],
+    'LIBRARIES'     : [],
+    'LTLIBRARIES'   : [],
+    'LISP'          : [],
+    'PYTHON'        : [],
+    'JAVA'          : [],
+    'SCRIPTS'       : [],
+    'DATA'          : [],
+    'HEADERS'       : [],
+    'MANS'          : [],
+    'TEXINFOS'      : [],
+}
+
+__am_primary_forbid_add_prefixes = {
+    'PROGRAMS'      : [],
+    'LIBRARIES'     : [],
+    'LTLIBRARIES'   : [],
+    'LISP'          : [],
+    'PYTHON'        : [],
+    'JAVA'          : [],
+    'SCRIPTS'       : [],
+    'DATA'          : [],
+    'HEADERS'       : [],
+    'MANS'          : [],
+    'TEXINFOS'      : [],
+}
+
+__am_main_forbid_add_prefixes = {
+    'bin'           : [],
+    'sbin'          : [],
+    'libexec'       : [],
+    'dataroot'      : [],
+    'data'          : [],
+    'sysconf'       : [],
+    'sharedstate'   : [],
+    'localstate'    : [],
+    'include'       : [],
+    'oldinclude'    : [],
+    'doc'           : [],
+    'info'          : [],
+    'html'          : [],
+    'dvi'           : [],
+    'pdf'           : [],
+    'ps'            : [],
+    'lib'           : [],
+    'lisp'          : [],
+    'locale'        : [],
+    'man'           : ['nobase'],
+    'pkgdata'       : [],
+    'pkginclude'    : [],
+    'pkglib'        : [],
+    'pkglibexec'    : [],
+#
+    'noinst'        : ['nobase'],
+    'check'         : []
+}
+
 # According to automake's "The Two Parts of Install"
 # http://www.gnu.org/software/automake/manual/automake.html#The-Two-Parts-of-Install
 __am_install_data_prefixes = [ 
@@ -181,6 +240,8 @@ for sec in __am_man_sections:
     __am_primary_main_prefixes['MANS'].append('man%s' % sec)
     __am_main_prefixes.append('man%s' % sec)
     __am_install_data_prefixes.append('man%s' % sec)
+    __am_main_forbid_add_prefixes['man%s' % sec] = \
+        __am_main_forbid_add_prefixes['man']
 
 
 # add noinst and check EXTRA prefixes where appropriate
