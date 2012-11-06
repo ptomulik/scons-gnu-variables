@@ -21,14 +21,15 @@
 
 Import('env')
 
-from SConsGnuVariables.AmUniformNames import StandardUniformNames, \
-                                             FilterInstallExecNames, \
-                                             FilterInstallDataNames
-from pprint import PrettyPrinter
-
-
-pp = PrettyPrinter(indent = 4)
-print("Standard automake uniform variables for install-exec:")
-pp.pprint(sorted(FilterInstallExecNames(StandardUniformNames())))
-print("Standard automake uniform variables for install-data:")
-pp.pprint(sorted(FilterInstallDataNames(StandardUniformNames())))
+# TODO: implement the example
+## from SConsGnuVariables.AmUniformNames import StandardUniformNames, \
+##                                              FilterInstallExecNames, \
+##                                              FilterInstallDataNames
+## from pprint import PrettyPrinter
+## 
+## 
+## pp = PrettyPrinter(indent = 4)
+## print("Standard automake uniform variables for install-exec:")
+## pp.pprint(sorted(FilterInstallExecNames(StandardUniformNames())))
+## print("Standard automake uniform variables for install-data:")
+## pp.pprint(sorted(FilterInstallDataNames(StandardUniformNames())))

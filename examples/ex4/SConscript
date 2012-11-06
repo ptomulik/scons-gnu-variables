@@ -21,14 +21,15 @@
 
 Import('env')
 
-from SConsGnuVariables import AmUniformNames
+from SConsGnuVariables.AmUniformNames import StandardPrimaryNames, \
+                                             StandardPrimaryMainPrefixes
 from pprint import PrettyPrinter
 
 
 pp = PrettyPrinter(indent = 4)
 print("Standard primary names:")
-pp.pprint(sorted(AmUniformNames.StandardPrimaryNames()))
-print("Standard directory prefixes:")
-pp.pprint(AmUniformNames.StandardPrimaryDirPrefixes())
-print("Standard uniform names:")
-pp.pprint(sorted(AmUniformNames.StandardUniformNames()))
+pp.pprint(sorted(StandardPrimaryNames()))
+print("Standard prefixes for primaries:")
+pp.pprint(StandardPrimaryMainPrefixes())
+##print("Standard uniform names:")
+##pp.pprint(sorted(AmUniformNames.StandardUniformNames()))
