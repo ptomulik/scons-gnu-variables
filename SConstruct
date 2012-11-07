@@ -31,7 +31,7 @@ for n in range(1,6):
 
 epydoc = env.Detect(['epydoc'])
 if epydoc:
-   epydocflags = '-v --html --css grayscale --inheritance listed'
+   epydocflags = '-v --html --css grayscale --inheritance listed --no-private'
    epydoccom = ' '.join([epydoc,'-o $TARGET.dir', epydocflags,
                          'SConsGnuVariables'])
    source =  env.Glob('SConsGnuVariables/*.py')

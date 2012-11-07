@@ -244,22 +244,24 @@ __std_install_exec_prefixes = [
     'pkglib'
 ]
 
-#############################################################################
-# generate manX directory prefixes
 __std_man_sections = map(lambda x : str(x), range(0,10)) + ['n', 'l']
-for sec in __std_man_sections:
-    __std_primary_main_prefixes['MANS'].append('man%s' % sec)
-    __std_main_prefixes.append('man%s' % sec)
-    __std_install_data_prefixes.append('man%s' % sec)
-    __std_forbid_main_add_prefixes['man%s' % sec] = \
-        __std_forbid_main_add_prefixes['man']
-
 
 #############################################################################
-# add noinst and check EXTRA prefixes where appropriate
-for primary in __std_primary_main_prefixes.keys():
-    __std_primary_main_prefixes[primary].append('noinst')
-    __std_primary_main_prefixes[primary].append('check')
+def __init_module_vars():
+    # generate manX directory prefixes
+    for sec in __std_man_sections:
+        __std_primary_main_prefixes['MANS'].append('man%s' % sec)
+        __std_main_prefixes.append('man%s' % sec)
+        __std_install_data_prefixes.append('man%s' % sec)
+        __std_forbid_main_add_prefixes['man%s' % sec] = \
+            __std_forbid_main_add_prefixes['man']
+    # add 'noinst' and 'check' prefixes where appropriate
+    for primary in __std_primary_main_prefixes.keys():
+        __std_primary_main_prefixes[primary].append('noinst')
+        __std_primary_main_prefixes[primary].append('check')
+
+__init_module_vars()
+
 
 #############################################################################
 def standard_primary_names():
