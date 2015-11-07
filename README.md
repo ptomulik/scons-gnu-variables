@@ -1,6 +1,10 @@
 SConsGnuVariables
 =================
 
+**THIS PROJECT IS DISCONTINUED -- PLEASE DO NOT USE**
+
+See [scons-gnu-arguments](https://github.com/ptomulik/scons-gnu-arguments)
+
 Welcome to SConsGnuVariables.
 
 This package provides SCons with GNU variables (e.g. direcory variables)
